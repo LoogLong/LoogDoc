@@ -1,4 +1,9 @@
 FMODEL AES Key:
 https://cs.rin.ru/forum/viewtopic.php?t=100672
 
+map:
+UnrealMappingsDumper
+
+reader:
+FModelCustom
 
