@@ -1,0 +1,9 @@
+# -*- coding:utf-8 -*-
+import os, sys, json
+import unreal
+
+print("Import UEFormat Start!")
+
+AssetTool = unreal.AssetToolsHelpers.get_asset_tools()
+ImportData = unreal.AutomatedAssetImportData()
+AssetTool.import_asset_automated(ImportData)
