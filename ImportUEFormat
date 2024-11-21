@@ -6,4 +6,7 @@ print("Import UEFormat Start!")
 
 AssetTool = unreal.AssetToolsHelpers.get_asset_tools()
 ImportData = unreal.AutomatedAssetImportData()
-AssetTool.import_asset_automated(ImportData)
+ImportData.destination_path = "/Game/"
+ImportData.filenames = [absFilePath]
+ImportData.replace_existing = true
+ImportedAsset = AssetTool.import_asset_automated(ImportData)
