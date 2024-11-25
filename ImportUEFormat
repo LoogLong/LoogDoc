@@ -9,4 +9,18 @@ ImportData = unreal.AutomatedAssetImportData()
 ImportData.destination_path = "/Game/"
 ImportData.filenames = [absFilePath]
 ImportData.replace_existing = true
+ImportData.factory = unreal.EAnimFactory() # EModelFactory()
+ImportData.factory.set_editor_property("silent_import", True)
 ImportedAsset = AssetTool.import_asset_automated(ImportData)
+
+# material
+1. texture
+
+2.material
+
+3.setup material
+
+
+
+unreal.EditorAssetLibraty.save_directory("/Game")
+unreal.EditorLoadingAndSavingUtils.save_dirty_packages(True, True)
