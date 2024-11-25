@@ -15,8 +15,12 @@ ImportedAsset = AssetTool.import_asset_automated(ImportData)
 
 # material
 1. texture
+ AssetTool.import_asset_automated(ImportData)
+
+
 
 2.material
+
 
 3.setup material
 
