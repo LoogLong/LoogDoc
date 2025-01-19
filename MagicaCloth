@@ -1,0 +1,53 @@
+主要流程：
+1. 读取动画姿势  masterJob = bm.ReadTransform(masterJob);
+    使用动画姿势来更新 bone manager 中的buffer
+    input：动画姿势buffer
+    output：bm.positionArray, bm.rotationArray，bm.localPositionArray, bm.localRotationArray, bm.localToWorldMatrixArray
+
+2. 将动画姿势应用给代理网格。作为代理网格的基本姿势  masterJob = vm.PreProxyMeshUpdate(masterJob);
+    使用bone manager中的transform信息，更新代理网格
+    input: bm.localToWorldMatrixArray
+    output: vm.positions, rotations
+
+3. 更新team的中心和惯性 masterJob = tm.CalcCenterAndInertiaAndWind(masterJob);
+    使用virtual mesh manager和bone manager中的transform计算team的中心和惯性
+    input: vm.positions,vm.rotations. bm.positionArray, bm.rotationArray
+    outut: TeamDataArray, TeamCenterData, WindData
+
+4. 重置所有质点或者处理因team中心移动带来的惯性 masterJob = sm.PreSimulationUpdate(masterJob);
+    如果是重置：根据代理网格(virtual mesh manager)中的顶点位置和旋转，直接更新simulation manager中的buffer
+        input: vm.positions, vm.rotationos
+        output: sm中所有buffer
+    如果是惯性：根据sm中的buff加上CenterData，更新sm中的buffer
+        input:Team.teamDataArray，Team.parameterArray，Team.centerDataArray
+        output: sm中的所有buffer
+
+5. 更新碰撞器 masterJob = MagicaManager.Collider.PreSimulationUpdate(masterJob);
+    根据bone manager中的transform信息更新collider manager
+    input：bm.positionArray, bm.rotationArray
+    output: collider manager中的 old和new transform
+
+6. 执行布料模拟 ： masterJob = sm.SimulationStepUpdate(maxUpdateCount, i, masterJob);
+    a. jobHandle = tm.SimulationStepTeamUpdate(updateIndex, jobHandle);
+    b. 拆分 ParticleJob？CreateUpdateParticleList
+    c. collider 更新CreateUpdateColliderList / StartSimulationStep
+    d. 质点更新 StartSimulationStepJob
+
+7. 模拟完成后，使用代理网格位置驱动显式位置：masterJob = sm.CalcDisplayPosition(masterJob);
+    根据virtual meah manager中的transform，计算simulation manager中的display pos array
+    input: vm.positions, vm.rotations
+    output: sm.DispPosArray
+
+8. 布料模拟后，计算质点的姿势。如果是链式，则会针对链条，调整姿势。对于bone cloth 将顶点姿势复制到对应的transform中  masterJob = vm.PostProxyMeshUpdate(masterJob);
+    根据virtual mesh manager中的 顶点transform以及父子信息计算 vm中的顶点的rotation
+    input：vm中的顶点transform,以及其父子关系
+    output: vm的rotation
+
+9. 将transform写入动画masterJob = bm.WriteTransform(masterJob);
+    将bone manager中的transform写入动画姿势
+    input：bm.positionArray, bm.rotationArray,bm.localPositionArray,bm.localRotationArray
+    output：动画姿势buffer
+
+
+
+
