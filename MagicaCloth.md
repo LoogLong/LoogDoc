@@ -1,4 +1,4 @@
-主要流程：
+# 主要流程
 1. 读取动画姿势  masterJob = bm.ReadTransform(masterJob);
     使用动画姿势来更新 bone manager 中的buffer
     input：动画姿势buffer
@@ -70,5 +70,12 @@
     output：动画姿势buffer
 
 
+# 速度计算
+有专用的速度位置。
+速度位置更新流程：
+1. 读取上一次的最终位置作为速度位置的起始点。
+2. 施加惯性偏移
+3. 约束与碰撞修改
+4. 计算速度
 
 
